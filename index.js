@@ -63,14 +63,25 @@ const sendEmail = async (newAvailabilitiesByCentre) => {
         return;
     }
 
-    const centres = Object.keys(newAvailabilitiesByCentre).join(", ");
+    const centresCsv = Object.keys(newAvailabilitiesByCentre).join(", ");
+    const centres = Object.keys(newAvailabilitiesByCentre).map(centre => {
+        const newAvailabilities = newAvailabilitiesByCentre[centre];
+        const dateAndTimes = newAvailabilities.map(availability => {
+            return { ulText: `${availability.date} at ${availability.time}` };
+        });
+        return {
+            name: centre,
+            dateAndTimes,
+        }
+    });
     const res = await sesClient.send(new SendTemplatedEmailCommand({
-        Source: "badminton@davidliao.ca",
+        Source: "Badminton Buddy <badminton@davidliao.ca>",
         Destination: {
             ToAddresses: ["badminton@davidliao.ca"],
         },
         Template: process.env.emailTemplateName || "badminton-availability-found",
         TemplateData: JSON.stringify({
+            centresCsv,
             centres,
         }),
         ReturnPath: "badminton@davidliao.ca",
@@ -80,11 +91,11 @@ const sendEmail = async (newAvailabilitiesByCentre) => {
 
 const main = async () => {
     const centres = {
-        richcraft: "https://reservation.frontdesksuite.ca/rcfs/richcraftkanata/ReserveTime/TimeSelection?pageId=b3b9b36f-8401-466d-b4c4-19eb5547b43a&buttonId=28f471f1-d18d-4343-8899-174482066d6c&culture=en",
-        cardelrec: "https://reservation.frontdesksuite.ca/rcfs/cardelrec/ReserveTime/TimeSelection?pageId=a10d1358-60a7-46b6-b5e9-5b990594b108&buttonId=11a063a7-331c-4409-937b-97efed25c1b9&culture=en",
-        hintonburg: "https://reservation.frontdesksuite.ca/rcfs/hintonburgcc/ReserveTime/TimeSelection?pageId=171093b3-dfc1-4193-b02c-bd8173675fd5&buttonId=22c27780-383b-411d-b06e-3fc4ae63e282&culture=en",
-        minto: "https://reservation.frontdesksuite.ca/rcfs/mintobarrhaven/ReserveTime/TimeSelection?pageId=69f7cf1e-4b39-4609-9cff-fe2deeb4c231&buttonId=aa574cf4-096d-4ac6-89ad-795871bddba3&culture=en",
-        nepean: "https://reservation.frontdesksuite.ca/rcfs/nepeansportsplex/ReserveTime/TimeSelection?culture=en&pageId=b0d362a1-ba36-42ae-b1e0-feefaf43fe4c&buttonId=9ce6512e-016d-4bef-8a73-461225acfb08",
+        Richcraft: "https://reservation.frontdesksuite.ca/rcfs/richcraftkanata/ReserveTime/TimeSelection?pageId=b3b9b36f-8401-466d-b4c4-19eb5547b43a&buttonId=28f471f1-d18d-4343-8899-174482066d6c&culture=en",
+        Cardelrec: "https://reservation.frontdesksuite.ca/rcfs/cardelrec/ReserveTime/TimeSelection?pageId=a10d1358-60a7-46b6-b5e9-5b990594b108&buttonId=11a063a7-331c-4409-937b-97efed25c1b9&culture=en",
+        Hintonburg: "https://reservation.frontdesksuite.ca/rcfs/hintonburgcc/ReserveTime/TimeSelection?pageId=171093b3-dfc1-4193-b02c-bd8173675fd5&buttonId=22c27780-383b-411d-b06e-3fc4ae63e282&culture=en",
+        Minto: "https://reservation.frontdesksuite.ca/rcfs/mintobarrhaven/ReserveTime/TimeSelection?pageId=69f7cf1e-4b39-4609-9cff-fe2deeb4c231&buttonId=aa574cf4-096d-4ac6-89ad-795871bddba3&culture=en",
+        Nepean: "https://reservation.frontdesksuite.ca/rcfs/nepeansportsplex/ReserveTime/TimeSelection?culture=en&pageId=b0d362a1-ba36-42ae-b1e0-feefaf43fe4c&buttonId=9ce6512e-016d-4bef-8a73-461225acfb08",
     };
 
     const newAvailabilitiesByCentre = {};
