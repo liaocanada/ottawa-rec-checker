@@ -57,7 +57,7 @@ const updateAvailability = async (centre, availability) => {
 };
 
 // Assumes all values in newAvailabilitiesByCentre have available=true
-const sendEmail = async (newAvailabilitiesByCentre) => {
+const sendEmail = async (newAvailabilitiesByCentre, urlsByCentre) => {
     if (!newAvailabilitiesByCentre) {
         console.log("sendEmail() error: no newAvailabilitiesByCentre", newAvailabilitiesByCentre);
         return;
@@ -72,11 +72,12 @@ const sendEmail = async (newAvailabilitiesByCentre) => {
         return {
             name: centre,
             dateAndTimes,
+            url: urlsByCentre[centre],
         }
     });
     const recipients = process.env.recipients.split(",");
     const res = await sesClient.send(new SendTemplatedEmailCommand({
-        Source: "Badminton Buddy <badminton@davidliao.ca>",
+        Source: "Badminton Baddy <badminton@davidliao.ca>",
         Destination: {
             ToAddresses: recipients,
         },
@@ -114,7 +115,7 @@ const main = async () => {
     }
 
     if (Object.keys(newAvailabilitiesByCentre).length > 0) {
-        const messageId = await sendEmail(newAvailabilitiesByCentre);
+        const messageId = await sendEmail(newAvailabilitiesByCentre, centres);
         console.log("Sent email, messageId", messageId);
     } else {
         console.log("No new availabilities");
