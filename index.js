@@ -74,10 +74,11 @@ const sendEmail = async (newAvailabilitiesByCentre) => {
             dateAndTimes,
         }
     });
+    const recipients = process.env.recipients.split(",");
     const res = await sesClient.send(new SendTemplatedEmailCommand({
         Source: "Badminton Buddy <badminton@davidliao.ca>",
         Destination: {
-            ToAddresses: ["badminton@davidliao.ca"],
+            ToAddresses: recipients,
         },
         Template: process.env.emailTemplateName || "badminton-availability-found",
         TemplateData: JSON.stringify({
