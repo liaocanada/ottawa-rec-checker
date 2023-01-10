@@ -106,6 +106,10 @@ const main = async () => {
 
         for (const availability of availabilities) {
             const transitionedToAvailable = await updateAvailability(centre, availability);
+            const isWeekend = availability.date.toLowerCase().startsWith("s");
+            if (!!process.env.weekendOnly && !isWeekend) {
+                continue;
+            }
             if (transitionedToAvailable) {
                 const newAvailabilities = newAvailabilitiesByCentre[centre] || [];
                 newAvailabilities.push(availability);
