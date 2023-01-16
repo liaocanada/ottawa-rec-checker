@@ -40,7 +40,7 @@ export class BadmintonCheckerCdkStack extends cdk.Stack {
       functionName: "checkBadminton",
       runtime: lambda.Runtime.NODEJS_18_X,
       handler: "index.handler",
-      code: lambda.Code.fromAsset(path.join(__dirname, "..", "..", "badminton-checker")),
+      code: lambda.Code.fromAsset(path.join(__dirname, "..", "src")),
       timeout: cdk.Duration.seconds(15),
       environment: {
         tableName: ddb.tableName,
