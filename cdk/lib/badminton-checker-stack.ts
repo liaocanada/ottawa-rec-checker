@@ -9,7 +9,7 @@ import * as ses from "aws-cdk-lib/aws-ses";
 import { EventbridgeToLambda } from "@aws-solutions-constructs/aws-eventbridge-lambda";
 import { htmlBodyTemplate, subjectTemplate } from "./email-template";
 
-export class BadmintonCheckerCdkStack extends cdk.Stack {
+export class BadmintonCheckerStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 

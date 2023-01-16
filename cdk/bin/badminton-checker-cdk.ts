@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
-import { BadmintonCheckerCdkStack } from '../lib/badminton-checker-cdk-stack';
+import { BadmintonCheckerStack } from '../lib/badminton-checker-stack';
 
 const app = new cdk.App();
-new BadmintonCheckerCdkStack(app, 'BadmintonCheckerCdkStack', {
+new BadmintonCheckerStack(app, 'BadmintonCheckerStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
