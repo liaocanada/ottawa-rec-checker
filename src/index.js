@@ -57,7 +57,7 @@ const updateAvailability = async (centre, availability) => {
 };
 
 // Assumes all values in newAvailabilitiesByCentre have available=true
-const sendEmail = async (newAvailabilitiesByCentre, urlsByCentre) => {
+const sendEmail = async (newAvailabilitiesByCentre) => {
     if (!newAvailabilitiesByCentre) {
         console.log("sendEmail() error: no newAvailabilitiesByCentre", newAvailabilitiesByCentre);
         return;
@@ -72,7 +72,7 @@ const sendEmail = async (newAvailabilitiesByCentre, urlsByCentre) => {
         return {
             name: centre,
             dateAndTimes,
-            url: urlsByCentre[centre],
+            url: "https://badminton.davidliao.ca",
         }
     });
     const recipients = process.env.recipients.split(",");
@@ -119,7 +119,7 @@ const main = async () => {
     }
 
     if (Object.keys(newAvailabilitiesByCentre).length > 0) {
-        const messageId = await sendEmail(newAvailabilitiesByCentre, centres);
+        const messageId = await sendEmail(newAvailabilitiesByCentre);
         console.log("Sent email, messageId", messageId);
     } else {
         console.log("No new availabilities");
