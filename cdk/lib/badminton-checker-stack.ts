@@ -10,6 +10,8 @@ import { EventbridgeToLambda } from "@aws-solutions-constructs/aws-eventbridge-l
 import { htmlBodyTemplate, subjectTemplate } from "./email-template";
 
 export class BadmintonCheckerStack extends cdk.Stack {
+  public readonly ddb: dynamodb.Table;
+
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
@@ -26,6 +28,7 @@ export class BadmintonCheckerStack extends cdk.Stack {
       tableClass: dynamodb.TableClass.STANDARD_INFREQUENT_ACCESS,
       billingMode: dynamodb.BillingMode.PAY_PER_REQUEST,
     });
+    this.ddb = ddb;
 
     const emailTemplate = new ses.CfnTemplate(this, "emailTemplate", {
       template: {
