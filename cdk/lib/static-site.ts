@@ -73,14 +73,14 @@ export class StaticSite extends Construct {
     });
     new CfnOutput(this, 'Certificate', { value: certificate.certificateArn });
 
-    
+
     // CloudFront distribution
     const distribution = new cloudfront.Distribution(this, 'SiteDistribution', {
       certificate: certificate,
       defaultRootObject: props.defaultRootObject,
       domainNames: [siteDomain],
       minimumProtocolVersion: cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
-      errorResponses:[
+      errorResponses: [
         {
           httpStatus: 403,
           responseHttpStatus: 403,
@@ -89,7 +89,7 @@ export class StaticSite extends Construct {
         }
       ],
       defaultBehavior: {
-        origin: new cloudfront_origins.S3Origin(siteBucket, {originAccessIdentity: cloudfrontOAI}),
+        origin: new cloudfront_origins.S3Origin(siteBucket, { originAccessIdentity: cloudfrontOAI }),
         compress: true,
         allowedMethods: cloudfront.AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
         viewerProtocolPolicy: cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,

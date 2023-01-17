@@ -5,8 +5,6 @@ import * as agw from "@aws-cdk/aws-apigatewayv2-alpha";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
-import * as s3 from "aws-cdk-lib/aws-s3";
-import * as s3Deployment from "aws-cdk-lib/aws-s3-deployment";
 import { StaticSite } from "./static-site";
 
 interface DashboardStackProps extends cdk.StackProps {
