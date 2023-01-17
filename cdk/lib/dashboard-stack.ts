@@ -5,6 +5,9 @@ import * as agw from "@aws-cdk/aws-apigatewayv2-alpha";
 import { HttpLambdaIntegration } from "@aws-cdk/aws-apigatewayv2-integrations-alpha";
 import * as lambda from "aws-cdk-lib/aws-lambda";
 import * as dynamodb from "aws-cdk-lib/aws-dynamodb";
+import * as s3 from "aws-cdk-lib/aws-s3";
+import * as s3Deployment from "aws-cdk-lib/aws-s3-deployment";
+import { StaticSite } from "./static-site";
 
 interface DashboardStackProps extends cdk.StackProps {
   ddb: dynamodb.Table;
@@ -14,6 +17,7 @@ export class DashboardStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props: DashboardStackProps) {
     super(scope, id, props);
 
+    // Backend
     const getAvailabilitiesFunction = new lambda.Function(this, "getAvailabilitiesByCentreFunction", {
       functionName: "getAvailabilitiesByCentre",
       runtime: lambda.Runtime.NODEJS_18_X,
@@ -23,9 +27,7 @@ export class DashboardStack extends cdk.Stack {
     });
     props.ddb.grantReadData(getAvailabilitiesFunction);
 
-    const lambdaIntegration = new HttpLambdaIntegration('dashboard-integration', getAvailabilitiesFunction);
-
-    const httpApiGateway = new agw.HttpApi(this, 'httpApiGateway', {
+    const httpApiGateway = new agw.HttpApi(this, "httpApiGateway", {
       apiName: "badminton-availabilities",
       corsPreflight: {
         allowOrigins: ["http://badminton.davidliao.ca", "https://badminton.davidliao.ca"],
@@ -40,9 +42,17 @@ export class DashboardStack extends cdk.Stack {
       },
     });
     httpApiGateway.addRoutes({
-      path: '/',
+      path: "/",
       methods: [agw.HttpMethod.GET],
-      integration: lambdaIntegration,
+      integration: new HttpLambdaIntegration("dashboard-integration", getAvailabilitiesFunction),
+    });
+
+    // Frontend
+    new StaticSite(this, "dashboard-site", {
+      domainName: "davidliao.ca",
+      siteSubDomain: "badminton",
+      sourceDirectory: "./site-contents",
+      defaultRootObject: "index.html",
     });
   }
 }
