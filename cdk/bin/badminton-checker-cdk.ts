@@ -2,6 +2,7 @@
 import 'source-map-support/register';
 import * as cdk from 'aws-cdk-lib';
 import { BadmintonCheckerStack } from '../lib/badminton-checker-stack';
+import { DashboardStack } from '../lib/dashboard-stack';
 
 const app = new cdk.App();
 new BadmintonCheckerStack(app, 'BadmintonCheckerStack', {
@@ -19,3 +20,5 @@ new BadmintonCheckerStack(app, 'BadmintonCheckerStack', {
 
   /* For more information, see https://docs.aws.amazon.com/cdk/latest/guide/environments.html */
 });
+
+new DashboardStack(app, 'DashboardStack');
